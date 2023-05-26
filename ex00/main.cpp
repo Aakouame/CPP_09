@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:04 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/26 10:17:51 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/26 18:11:14 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,14 @@ int main(int ac, char **av)
         try{
             Bitcoinexchange data;
             
-            data.parse();
+            data.parse(av[1]);
         }
-        catch ()
+        catch (std::exception &e)
+        {
+            std::cerr << e.what() << std::endl;
+        }
     }
+    else
+        std::cerr << "The program must take 1 file as argument !" << std::endl;
+    return(0);
 }
