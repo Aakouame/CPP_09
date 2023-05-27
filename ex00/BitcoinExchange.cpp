@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:07 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/27 17:23:17 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/27 18:37:07 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,7 @@ int	checkValue(std::string	value)
 //--
 void    Bitcoinexchange::parse_map(std::string fileName, int i){
     std::ifstream   file(fileName);
-    std::map<std::string, float>    *tmp;
-    
-    if (i == 0)
-        tmp = &_database;
-    else
-        tmp = &_data;
+
     if (file.is_open())
     {
         std::string line;
@@ -102,7 +97,8 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 			if (line != "date | value")
 				throw std::runtime_error("Bad input: (date | value)");
         while (std::getline(file, line)){
-			if (i == 1){
+			if (i == 1)
+			{
 				date = line.substr(0, line.find(' ') - 1);
 				if (line.substr(10, 12) != " | ")
 					throw std::runtime_error ("should be separated by \" | \"");
@@ -111,9 +107,13 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 				value = line.substr(13, line.size() - 1);
 				if (checkValue(value))
 					throw std::runtime_error ("Bad input: check the value !");
+				_data.insert(date, value);
 			}
-			else{
-				date = line.substr(0, line.find(','));
+			else
+			{
+				date = line.substr(0, line.find(',') - 1);
+				value = line.substr(line.find(',') + 1);
+				_database.insert(date, value);
 			}
 			
         }
@@ -127,4 +127,6 @@ void    Bitcoinexchange::parse(const char *av)
 {
     _inputFile = av;
     
+	parse_map(_inputFile, 1);
+	parse_map("data.csv", 0);
 }
