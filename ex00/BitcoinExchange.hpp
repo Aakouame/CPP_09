@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:11 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/27 13:31:45 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/27 14:58:45 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <cstring>
 #include <fstream>
 #include <map>
+#include <cstdlib>
 
 class   Bitcoinexchange
 {
