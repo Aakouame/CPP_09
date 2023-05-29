@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:07 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/29 12:32:20 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/29 14:02:08 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,9 +82,24 @@ int	checkValue(std::string	value)
 	if (counter > 1)
 		return (3);
 	nb = atof(value.c_str());
-	if (nb < 0 || nb > 1000)
+	if (nb < 0)
 		return (4);
+	if (nb > 1000)
+		return (5);
 	return(0);
+}
+//--
+std::string	cpyStr(std::string str, int start, int end)
+{
+	std::string	tmp;
+
+	while (start != end)
+	{
+		tmp += str[start];
+		start++;
+	}
+	tmp += str[end];
+	return (str);
 }
 //--
 void    Bitcoinexchange::parse_map(std::string fileName, int i){
@@ -99,18 +114,33 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 		std::getline(file, line);
 		if (i == 1)
 			if (line != "date | value")
-				throw std::runtime_error("Bad input: (date | value)");
+				throw std::runtime_error("Bad input: check if the first line == \"date | value\"");
         while (std::getline(file, line)){
 			if (i == 1)
 			{
-				date = line.substr(0, line.find(' ') - 1);
-				if (line.substr(10, 12) != " | ")
-					throw std::runtime_error ("should be separated by \" | \"");
-				if (checkDate(date))
+				date = line.substr(0, line.find(' '));
+				
+				// std::cout << "date = " << date << std::endl;
+				if (line.substr(10, 3) != " | ")
+				{
+					std::cout << "Error: bad input => should be separated by \" | \"" << std::endl;
+					continue;
+				}
+				if (checkDate(date)){
 					std::cout << "Error: bad input => " << date << std::endl;
+					continue ;
+				}
 				value = line.substr(13, line.size() - 1);
+				// std::cout << "Value = " << value << std::endl;
 				if (checkValue(value))
-					throw std::runtime_error ("Bad input: check the value !");
+				{
+					if (checkValue(value) == 4)
+						std::cout << "Error: not a positive number." << std::endl;
+					else if (checkValue(value) == 5)
+						std::cout << "Error: too large a number." << std::endl;
+					else
+						std::cout << "Bad input: check the value !" << std::endl;
+				}
 			}
 			else
 			{
@@ -118,7 +148,6 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 				value = line.substr(line.find(',') + 1);
 				_database.insert(std::make_pair(date,atof(value.c_str())));
 			}
-			
         }
         file.close();
     }
@@ -131,9 +160,9 @@ void    Bitcoinexchange::parse(const char *av)
     _inputFile = av;
     
 	parse_map("data.csv", 0);
-	// parse_map(_inputFile, 1);
+	parse_map(_inputFile, 1);
 	std::map<std::string, float>::iterator it;
-    for (it = _database.begin(); it != _database.end(); ++it) {
-        std::cout << it->first << ": " << it->second << std::endl;
-    }
+    // for (it = _database.begin(); it != _database.end(); ++it) {
+    //     std::cout << it->first << ": " << it->second << std::endl;
+    // }
 }
