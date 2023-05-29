@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:07 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/27 18:37:07 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/29 12:32:20 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,9 +32,7 @@ Bitcoinexchange::Bitcoinexchange(char *inFile):_inputFile(inFile){
 Bitcoinexchange &Bitcoinexchange::operator=(Bitcoinexchange const &equal){
     // std::cout << "Bitcoinexchange, assignement operator '=' called !" << std::endl;
     _inputFile = equal._inputFile;
-    _data.clear();
     _database.clear();
-    _data = equal._data;
     _database = equal._database;
     return (*this);
 }
@@ -51,12 +49,18 @@ int	checkDate(std::string	date)
 		if (date[i] < '0' || date[i] > '9')
 			return (3);
 	}
+	int tmp = atoi(date.substr(5, 6).c_str());
+	if (tmp > 12)
+		return (4);
 	if (date[7] != '-')
 		return (4);
 	for (int i= 8; i < 10; i++){
 		if (date[i] < '0' || date[i] > '9')
 			return (5);
 	}
+	tmp = atoi(date.substr(8, 9).c_str());
+	if (tmp > 30)
+		return (6);
 	return (0);
 }
 
@@ -66,7 +70,7 @@ int	checkValue(std::string	value)
 	int	nb;
 	if (value[0] == '.')
 		return (1);
-	for (int i = 0; i < value.size(); i++){
+	for (size_t i = 0; i < value.size(); i++){
 		if (value[i] < '0' || value[i] > '9' )
 		{
 			if (value[i] == '.')
@@ -103,17 +107,16 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 				if (line.substr(10, 12) != " | ")
 					throw std::runtime_error ("should be separated by \" | \"");
 				if (checkDate(date))
-					throw std::runtime_error("Bad input: check the date");
+					std::cout << "Error: bad input => " << date << std::endl;
 				value = line.substr(13, line.size() - 1);
 				if (checkValue(value))
 					throw std::runtime_error ("Bad input: check the value !");
-				_data.insert(date, value);
 			}
 			else
 			{
 				date = line.substr(0, line.find(',') - 1);
 				value = line.substr(line.find(',') + 1);
-				_database.insert(date, value);
+				_database.insert(std::make_pair(date,atof(value.c_str())));
 			}
 			
         }
@@ -127,6 +130,10 @@ void    Bitcoinexchange::parse(const char *av)
 {
     _inputFile = av;
     
-	parse_map(_inputFile, 1);
 	parse_map("data.csv", 0);
+	// parse_map(_inputFile, 1);
+	std::map<std::string, float>::iterator it;
+    for (it = _database.begin(); it != _database.end(); ++it) {
+        std::cout << it->first << ": " << it->second << std::endl;
+    }
 }

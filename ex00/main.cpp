@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:04 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/26 18:11:14 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/29 11:46:40 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ int main(int ac, char **av)
             Bitcoinexchange data;
             
             data.parse(av[1]);
+            
         }
         catch (std::exception &e)
         {
