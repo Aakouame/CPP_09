@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:07 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/29 14:02:08 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/29 09:37:52 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,13 @@ void    Bitcoinexchange::parse_map(std::string fileName, int i){
 						std::cout << "Error: too large a number." << std::endl;
 					else
 						std::cout << "Bad input: check the value !" << std::endl;
+				}
+				if (!checkDate(date) && !checkValue(value))
+				{
+					std::map<std::string, float>::iterator	it = _database.find(date);
+					if (it != _database.end())
+						std::cout << date << " => " << value << " = " << (atof(value.c_str()) * it->second);
+					std::cout << std::endl;
 				}
 			}
 			else
