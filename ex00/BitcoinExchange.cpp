@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/26 08:08:07 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/29 16:21:38 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/30 13:38:59 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,24 @@ Bitcoinexchange &Bitcoinexchange::operator=(Bitcoinexchange const &equal){
     return (*this);
 }
 //--
+int	found(int *tab, int x, int size)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (x == tab[i])
+			return (1);
+	}
+	return (0);
+}
+//--
 int	checkDate(std::string	date)
 {
 	for (int i = 0; i < 4; i++){
 		if (date[i] < '0' || date[i] > '9')
 			return (1);
 	}
-	int tmp = atoi(date.substr(0, 4).c_str());
-	if (tmp < 2009)
+	int year = atoi(date.substr(0, 4).c_str());
+	if (year < 2009)
 		return (4);
 	if (date[4] != '-')
 		return (2);
@@ -52,8 +62,8 @@ int	checkDate(std::string	date)
 		if (date[i] < '0' || date[i] > '9')
 			return (3);
 	}
-	tmp = atoi(date.substr(5, 7).c_str());
-	if (tmp > 12 || tmp <= 0)
+	int month = atoi(date.substr(5, 7).c_str());
+	if (month > 12 || month <= 0)
 		return (4);
 	if (date[7] != '-')
 		return (4);
@@ -61,9 +71,25 @@ int	checkDate(std::string	date)
 		if (date[i] < '0' || date[i] > '9')
 			return (5);
 	}
-	tmp = atoi(date.substr(8, 9).c_str());
-	if (tmp > 30 || tmp <= 0)
-		return (6);
+	int day = atoi(date.substr(8, 9).c_str());
+	int arr[] = {1, 3, 5, 7, 8, 10, 12};
+	if (found(arr, month, 7))
+		if (day > 31 || day <= 0)
+			return (6);
+	if (month == 2)
+	{
+		if (year % 4 == 0){
+			if (day > 29 || day <= 0)
+				return (6);
+		}
+		else
+			if (day > 28 || day <= 0)
+				return (6);
+	}
+	int tab[] = {4, 6, 9, 11};
+	if (found(tab, month, 4))
+		if (day > 30 || day <= 0)
+			return (6);
 	return (0);
 }
 
