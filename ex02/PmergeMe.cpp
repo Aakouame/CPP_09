@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 09:07:49 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/31 19:26:47 by akouame          ###   ########.fr       */
+/*   Updated: 2023/05/31 19:51:26 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,24 +78,18 @@ void    PmergeMe::merge_vec(int l, int mid, int r)
     while (i < r_size)
         it_r[i] = _vec[mid+i+1];
     i = 0;
+    _vec.clear();
     while (i < l_size && j < r_size)
     {
         if (it_l[i] <= it_r[j])
-            _vec[l] = it_l[i++];
+            _vec.push_back(it_l[i++]);
         else
-            _vec[l] = it_r[j++];
-        l++;
+            _vec.push_back(it_r[j++]);
     }
     while (i < l_size)
-    {
-        _vec[l] = it_l[i++];
-        l++;
-    }
+        _vec.push_back(it_l[i++]);
     while (j < r_size)
-    {
-        _vec[r] = it_r[j++];
-        l++;
-    }
+        _vec.push_back(it_r[j++]);
 }
 
 void	PmergeMe::sort_merge_vec(int l, int r)
