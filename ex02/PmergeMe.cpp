@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 09:07:49 by akouame           #+#    #+#             */
-/*   Updated: 2023/05/31 19:51:26 by akouame          ###   ########.fr       */
+/*   Updated: 2023/06/02 01:08:05 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,79 +36,132 @@ PmergeMe    &PmergeMe::operator=(PmergeMe const &equal){
     return (*this);
 }
 //--
-void	PmergeMe::display()
+void	PmergeMe::display(std::vector<int> &c)
 {
-	for (size_t i = 0; i < _vec.size(); i++){
-		std::cout << _vec[i] << " ";
+	for (size_t i = 0; i < c.size(); i++){
+		std::cout << c[i] << " ";
 	}
 	std::cout << std::endl;
 }
+
+long long current_timestamp()
+{
+    timeval tv;
+    gettimeofday(&tv, NULL);
+    return tv.tv_sec * 1000000LL + tv.tv_usec;
+}
+
 //--
-void    PmergeMe::sort_insert_vec()
+void    PmergeMe::sort_insert_vec(std::vector<int> &c)
 {
     int tmp;
     int j;
     
-    for (size_t i = 1; i < _vec.size(); i++)
+    for (size_t i = 1; i < c.size(); i++)
     {
-        tmp = _vec[i];
+        tmp = c[i];
         j = i - 1;
-        while (j >= 0 && _vec[j] > tmp)
+        while (j >= 0 && c[j] > tmp)
         {
-            _vec[j + 1] = _vec[j];
+            c[j + 1] = c[j];
             j--;
         }
-        _vec[j + 1] = tmp;
+        c[j + 1] = tmp;
     }
 }
-
-void    PmergeMe::merge_vec(int l, int mid, int r)
+//---
+void    PmergeMe::sort_insert_deq(std::deque<int> &c)
 {
-    int l_size = mid - l + 1;
-    int r_size = r - mid;
-    int i = -1;
-    int j = 0;
-
-    std::vector<int>    it_l;
-    std::vector<int>    it_r;
+    int tmp;
+    int j;
     
-    while (++i < l_size)
-        it_l[i] = _vec[l+i];
-    i = 0;
-    while (i < r_size)
-        it_r[i] = _vec[mid+i+1];
-    i = 0;
-    _vec.clear();
-    while (i < l_size && j < r_size)
+    for (size_t i = 1; i < c.size(); i++)
     {
-        if (it_l[i] <= it_r[j])
-            _vec.push_back(it_l[i++]);
-        else
-            _vec.push_back(it_r[j++]);
+        tmp = c[i];
+        j = i - 1;
+        while (j >= 0 && c[j] > tmp)
+        {
+            c[j + 1] = c[j];
+            j--;
+        }
+        c[j + 1] = tmp;
     }
-    while (i < l_size)
-        _vec.push_back(it_l[i++]);
-    while (j < r_size)
-        _vec.push_back(it_r[j++]);
-}
-
-void	PmergeMe::sort_merge_vec(int l, int r)
-{
-    int mid;
-
-    mid = l + (r - l) / 2;
-    sort_merge_vec(l, mid);
-    sort_merge_vec((mid + 1), r);
-    merge_vec(l, mid, r);
 }
 
 //--
-void    PmergeMe::sorting_vec()
+
+void    PmergeMe::sort_merge_vec(std::vector<int> &c, size_t start, size_t end, size_t mid)
 {
-    if (_vec.size() <= 10)
-        sort_insert_vec();
-    else
-        sort_merge_vec(0, _vec.size() - 1);
+    std::vector<int>    it;
+    size_t i = start;
+    size_t j = mid + 1;
+    
+    while (i <= mid && j <= end)
+    {
+        if (c[i] <= c[j])
+            it.push_back(c[i++]);
+        else
+            it.push_back(c[j++]);
+    }
+    while (i <= mid)
+        it.push_back(c[i++]);
+    while (j <= end)
+        it.push_back(c[j++]);
+   for (size_t k = start; k <= end; k++)
+        c[k] = it[k - start];
+}
+
+void    PmergeMe::sorting_vec(std::vector<int> &c, size_t start, size_t end)
+{
+    if (c.size() <= 100)
+    {
+        sort_insert_vec(c);
+        return ;
+    }
+    if (end > start)
+    {
+        int mid = start + (end - start) / 2;
+        sorting_vec(c, start, mid);
+        sorting_vec(c, mid + 1, end);
+        sort_merge_vec(c, start, end, mid);
+    }
+}
+//--
+void    PmergeMe::sort_merge_deq(std::deque<int> &c, size_t start, size_t end, size_t mid)
+{
+    std::deque<int>    it;
+    size_t i = start;
+    size_t j = mid + 1;
+    
+    while (i <= mid && j <= end)
+    {
+        if (c[i] <= c[j])
+            it.push_back(c[i++]);
+        else
+            it.push_back(c[j++]);
+    }
+    while (i <= mid)
+        it.push_back(c[i++]);
+    while (j <= end)
+        it.push_back(c[j++]);
+   for (size_t k = start; k <= end; k++)
+        c[k] = it[k - start];
+}
+
+void    PmergeMe::sorting_deq(std::deque<int> &c, size_t start, size_t end)
+{
+    if (c.size() <= 100)
+    {
+        sort_insert_deq(c);
+        return ;
+    }
+    if (end > start)
+    {
+        int mid = start + (end - start) / 2;
+        sorting_deq(c, start, mid);
+        sorting_deq(c, mid + 1, end);
+        sort_merge_deq(c, start, end, mid);
+    }
 }
 //--
 void    PmergeMe::parse(char **av)
@@ -122,7 +175,6 @@ void    PmergeMe::parse(char **av)
         j = 0;
         while (av[i][j])
         {
-			// std::cout << "av[" << i << "][" << j << "] = " << av[i][j] << std::endl;
 			if (!isdigit(av[i][j]))
 				throw std::runtime_error("Error: Bad input !");
 			j++;
@@ -140,11 +192,17 @@ void    PmergeMe::parse(char **av)
 		i++;
 	}
 	std::cout << "Before:\t";
-	display();
-	std::clock_t start = std::clock();
-    sorting_vec();
-    std::clock_t end = std::clock();
-    _duration_vec = (start - end) / (double)CLOCKS_PER_SEC;
+	display(_vec);
+	std::clock_t start_vc = std::clock();
+    sorting_vec(_vec, 0, (_vec.size() - 1));
+    std::clock_t end_vc = std::clock();
+    _duration_vec = (end_vc - start_vc) / (double)CLOCKS_PER_SEC;
     std::cout << "After:\t";
-    display();
+    display(_vec);
+    std::cout << "Time to process a range of 5 elements with std::vector :    " << _duration_vec << " us" << std::endl;
+    std::clock_t    start_dq = std::clock();
+    sorting_deq(_deq, 0, (_deq.size() - 1));
+    std::clock_t    end_dq = std::clock();
+    _duration_deq = ((end_dq - start_dq) / (double)CLOCKS_PER_SEC) * 1000000;
+    std::cout << "Time to process a range of 5 elements with std::deque :    " << _duration_deq << " us" << std::endl;
 }
