@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 09:07:46 by akouame           #+#    #+#             */
-/*   Updated: 2023/06/02 00:32:26 by akouame          ###   ########.fr       */
+/*   Updated: 2023/06/02 04:36:56 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,15 @@
 #include <vector>
 #include <ctime>
 #include <cstring>
+#include <chrono>
 
 class   PmergeMe
 {
-	// std::pair<std::vector<int>, std::vector<int> >	split;
     std::vector<int>	_vec;
 	double				_duration_vec;
     std::deque<int>		_deq;
 	double				_duration_deq;
+	
 	public:
 		PmergeMe();
 		~PmergeMe();
