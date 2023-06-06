@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 09:07:49 by akouame           #+#    #+#             */
-/*   Updated: 2023/06/02 04:37:24 by akouame          ###   ########.fr       */
+/*   Updated: 2023/06/06 21:29:04 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,6 @@ PmergeMe::PmergeMe(PmergeMe const &cpy){
 //--
 PmergeMe    &PmergeMe::operator=(PmergeMe const &equal){
     // std::cout << "PmergeMe, assignement operator '=' called !" << std::endl;
-    _vec.clear();
-    _deq.clear();
-    _vec = equal._vec;
-    _deq = equal._deq;
     _duration_vec = equal._duration_vec;
     _duration_deq = equal._duration_deq;
     return (*this);
@@ -38,9 +34,17 @@ PmergeMe    &PmergeMe::operator=(PmergeMe const &equal){
 //--
 void	PmergeMe::display(std::vector<int> &c)
 {
-	for (size_t i = 0; i < c.size(); i++){
-		std::cout << c[i] << " ";
+    if (c.size() > 5)
+    {
+        for (size_t i = 1; i <= 5; i++)
+            std::cout << c[i] << " ";
+        std::cout << "[...]";
 	}
+    else
+    {
+        for (size_t i = 1; i < c.size(); i++)
+            std::cout << c[i] << " ";
+    }
 	std::cout << std::endl;
 }
 
@@ -205,6 +209,7 @@ void    PmergeMe::parse(char **av)
         }
         i++;
     }
+    i = 0;
 	while (av[i])
 	{
 		n = atoi(av[i]);
@@ -213,7 +218,6 @@ void    PmergeMe::parse(char **av)
 		_vec.push_back(atoi(av[i]));
 		i++;
 	}
-    
 	std::cout << "Before:\t";
 	display(_vec);
     sorting_vec(_vec, 0, (_vec.size() - 1));
@@ -228,7 +232,8 @@ void    PmergeMe::parse(char **av)
     sorting_vec(_vec, 0, (_vec.size() - 1));
     std::clock_t end_vc = std::clock();
     _duration_vec = (end_vc - start_vc) / (double)CLOCKS_PER_SEC * 1000000;
-    std::cout << "Time to process a range of 5 elements with std::vector :    " << _duration_vec << " us" << std::endl;
+    std::cout << "Time to process a range of " << _vec.size() << " elements with std::vector :    " << _duration_vec << " us" << std::endl;
+    
 	i = 0;
     std::clock_t    start_dq = std::clock();
 	while (av[i])
@@ -236,5 +241,5 @@ void    PmergeMe::parse(char **av)
     sorting_deq(_deq, 0, (_deq.size() - 1));
     std::clock_t    end_dq = std::clock();
     _duration_deq = ((end_dq - start_dq) / (double)CLOCKS_PER_SEC) * 1000000;
-    std::cout << "Time to process a range of 5 elements with std::deque :    " << _duration_deq << " us" << std::endl;
+    std::cout << "Time to process a range of " << _deq.size() << " elements with std::deque :    " << _duration_deq << " us" << std::endl;
 }

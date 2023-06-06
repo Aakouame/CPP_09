@@ -6,7 +6,7 @@
 /*   By: akouame <akouame@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/31 09:07:46 by akouame           #+#    #+#             */
-/*   Updated: 2023/06/02 04:36:56 by akouame          ###   ########.fr       */
+/*   Updated: 2023/06/05 17:25:47 by akouame          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,7 @@
 
 class   PmergeMe
 {
-    std::vector<int>	_vec;
 	double				_duration_vec;
-    std::deque<int>		_deq;
 	double				_duration_deq;
 	
 	public:
